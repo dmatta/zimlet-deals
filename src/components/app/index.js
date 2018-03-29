@@ -4,6 +4,8 @@ import { withIntl } from '../../enhancers';
 import wire from 'wiretie';
 import style from './style';
 
+import Search from '../search';
+
 export default function createApp(context) {
 
 	@withIntl
@@ -27,7 +29,7 @@ export default function createApp(context) {
 						</ol>
 					</Sidebar>
 					<div class={style.main}>
-						Hello World
+						<Search />
 					</div>
 				</div>
 			);
