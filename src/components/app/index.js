@@ -32,6 +32,7 @@ export default function createApp(context) {
 						<ul id="coupon-list">
 							<li><a id="hi" href="#">Bluefly:Save $10 when you spend $40 on household essentials</a></li>
 						</ul>
+						<Search terms="you" />
 					</div>
 				</div>
 			);
