@@ -29,7 +29,7 @@ export default function createApp(context) {
 						</ol>
 					</Sidebar>
 					<div class={style.main}>
-						<Search />
+						<Search terms="you" />
 					</div>
 				</div>
 			);
