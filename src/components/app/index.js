@@ -28,23 +28,7 @@ export default function createApp(context) {
 							</li>
 						</ol>
 					</Sidebar>
-					<div class={style.main}>
-						<ul class={style.deals}>
-							<li class={style.deal}>
-								<span class={style.dealLeft}><Icon name="archive" /></span>
-								<span class={style.dealMiddle}><a href="#">Bluefly:Save $10 when you spend $40 on household essentials</a><br/>Expires: 2018-Apr-15
-								</span>
-								<span class={style.dealRight}><Button styleType="primary" brand="primary>">Save</Button> <Button styleType="secondary">Unsubscribe</Button></span>
-							</li>
-							<li class={style.deal}>
-								<span class={style.dealLeft}><Icon name="archive" /></span>
-								<span class={style.dealMiddle}><a href="#">Gobble gobble</a><br/>Expires: 2018-Apr-15
-								</span>
-								<span class={style.dealRight}><Button styleType="primary" brand="primary>">Save</Button> <Button styleType="secondary">Unsubscribe</Button></span>
-							</li>
-						</ul>
-			<Search terms="you" />
-					</div>
+					<Search />
 				</div>
 			);
 		}
