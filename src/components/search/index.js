@@ -6,7 +6,6 @@ import wire from 'wiretie';
 	searchResults: [
 		'searchRequest',
 		{
-			limit: 1,
 			needExp: 1,
 			query: terms,
 			types: 'message'
@@ -15,17 +14,21 @@ import wire from 'wiretie';
 }))
 export default class Search extends Component {
 
-    render({searchResults, pending, rejected }) {
-      console.log(searchResults);
-			let loading = pending && 'Loading...';
-			let error = rejected && 'Error';
-			let empty = !searchResults || !searchResults.length && 'Empty';
-			let results = !empty && searchResults.messages.map(message => <div>{message.excerpt}</div>);
+	render({searchResults, pending, rejected }) {
+		console.log(searchResults);
+		let loading = pending && 'Loading...';
+		let error = rejected && 'Error';
+		let empty = !searchResults || !searchResults.length && 'Empty';
+		let results = !empty && searchResults.messages.map(message => <div>{message.excerpt}</div>);
 
-        return (
-				<span>
-					{loading || error || empty || results }
-				</span>
-			);
-    }
+		return (
+			<span>
+				{loading || error || empty || results }
+			</span>
+		);
+	}
+}
+
+class DealsItem extends Component {
+
 }
