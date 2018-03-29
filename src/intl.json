@@ -1,0 +1,22 @@
+{
+	"zimlet-deals": {
+		"menuItem": "zimlet-deals",
+		"jira": {
+			"title": "Jira",
+			"key": "Key",
+			"summary": "Summary",
+			"status": "Status",
+			"prs": "Pull Requests",
+			"builds": "Builds",
+			"commits": "Commits",
+			"branches": "Branches"
+		},
+		"stash": {
+			"title": "Stash",
+			"status": "Status",
+			"branch": "Branch & Repo",
+			"role": "Role",
+			"lastUpdated": "lastUpdated"
+		}
+	}
+}
