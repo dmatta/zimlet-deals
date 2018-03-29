@@ -10,10 +10,10 @@ export default function createApp(context) {
 
 	@withIntl
 	@provide({ zimbraComponents: context.components })
-	@wire('zimbraComponents', null, ({ Sidebar }) => ({ Sidebar }))
+	@wire('zimbraComponents', null, ({ Sidebar, Button, Icon }) => ({ Sidebar,Button,Icon }))
 	class App extends Component {
 
-		render({ Sidebar }) {
+		render({ Sidebar,Button,Icon }) {
 			return (
 				<div class={style.wrapper}>
 					{/*Example of using component from ZimbraX client, in this case, Sidebar*/}
@@ -29,10 +29,21 @@ export default function createApp(context) {
 						</ol>
 					</Sidebar>
 					<div class={style.main}>
-						<ul id="coupon-list">
-							<li><a id="hi" href="#">Bluefly:Save $10 when you spend $40 on household essentials</a></li>
+						<ul class={style.deals}>
+							<li class={style.deal}>
+								<span class={style.dealLeft}><Icon name="archive" /></span>
+								<span class={style.dealMiddle}><a href="#">Bluefly:Save $10 when you spend $40 on household essentials</a><br/>Expires: 2018-Apr-15
+								</span>
+								<span class={style.dealRight}><Button styleType="primary" brand="primary>">Save</Button> <Button styleType="secondary">Unsubscribe</Button></span>
+							</li>
+							<li class={style.deal}>
+								<span class={style.dealLeft}><Icon name="archive" /></span>
+								<span class={style.dealMiddle}><a href="#">Gobble gobble</a><br/>Expires: 2018-Apr-15
+								</span>
+								<span class={style.dealRight}><Button styleType="primary" brand="primary>">Save</Button> <Button styleType="secondary">Unsubscribe</Button></span>
+							</li>
 						</ul>
-						<Search terms="you" />
+			<Search terms="you" />
 					</div>
 				</div>
 			);
