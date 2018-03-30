@@ -1,6 +1,7 @@
 .wrapper {
 	display: flex;
 	flex-direction: column;
+	overflow: auto;
 }
 
 .main {
@@ -9,37 +10,4 @@
 	width: ~"calc(100% - var(--sidebar-width))";
 	overflow-y: scroll;
 	padding: 20px;
-}
-#coupon-list li a{
-	color: red;
-}
-.deals{
-	width:100%;
-	list-style-type: none;
-}
-.deal {
-	margin-bottom:.5em;
-	padding:.5em;
-	border: 1px solid gray;
-	width:100%;
-	display:block;
-	font-size: 1.2em;
-	
-}
-.dealLeft, .dealMiddle, .dealRight{
-	display:inline-block;
-	vertical-align: top;
-}
-.dealLeft{
-//	display:inline-block;
-//	vertical-align: top;
-	width:10%;
-}
-.dealMiddle{
-	display:inline-block;
-	width:50%;
-}
-.dealRight{
-	display:inline-block;
-	width:40%;
 }

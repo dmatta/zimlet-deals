@@ -21,7 +21,7 @@ export default function createApp(context) {
 						<h3>Links</h3>
 						<ol>
 							<li>
-								<a href="https://lonni.me">lonni.me</a>
+								<a href="/email/saved-deals">Saved Deals</a>
 							</li>
 							<li>
 								<a href="https://github.com/zimbra/zimlet-cli">zimlet-cli</a>
