@@ -13,21 +13,11 @@ export default function createApp(context) {
 	@wire('zimbraComponents', null, ({ Sidebar, Button, Icon }) => ({ Sidebar,Button,Icon }))
 	class App extends Component {
 
-		render({ Sidebar,Button,Icon }) {
+		render({ MailSidebar,Button,Icon }) {
 			return (
 				<div class={style.wrapper}>
-					{/*Example of using component from ZimbraX client, in this case, Sidebar*/}
-					<Sidebar>
-						<h3>Links</h3>
-						<ol>
-							<li>
-								<a href="/email/saved-deals">Saved Deals</a>
-							</li>
-							<li>
-								<a href="https://github.com/zimbra/zimlet-cli">zimlet-cli</a>
-							</li>
-						</ol>
-					</Sidebar>
+					{/*Example of using component from ZimbraX client, in this case, MailSidebar*/}
+					<MailSidebar />
 					<Search />
 				</div>
 			);

@@ -56,8 +56,9 @@ export default class Search extends Component {
 }
 
 function getHTMLPart(mimePartsRoot) {
+	console.log('mimeParts:', mimePartsRoot);
 	if (mimePartsRoot.contentType === 'text/html') {
-		return mimePartsRoot.text;
+		return mimePartsRoot.content;
   	}
 
   	if (mimePartsRoot.contentType === 'multipart/alternative') {
@@ -65,7 +66,7 @@ function getHTMLPart(mimePartsRoot) {
       		.filter(({ contentType }) => contentType === 'text/html')[0];
 
     if (htmlPart) {
-      return htmlPart.text;
+      return htmlPart.content;
     }
   }
 }
@@ -92,15 +93,19 @@ class DealItem extends Component {
 	}
 
 	findUnsubLink = () => {
+		console.log('finding unsubscribe link for ', this.props.message);
+		if (!this.props.message.mimeParts) {
+			return;
+		}
 		//console.log(getHTMLPart(this.props.message.mimeParts));
-		let doc = new DOMParser().parseFromString(getHTMLPart(this.props.message.mimeParts), 'text/html');
-		let tags = doc.getElementsByTagName('a');
+		let doc = new DOMParser().parseFromString(getHTMLPart(this.props.message.mimeParts[0]), 'text/html');
+		let anchors = doc.getElementsByTagName('a');
 
-		let unsubRedirect = Array.from(tags).find((tag)=>
-			tag.textContent.toLowerCase() === "unsubscribe"
-			|| tag.textContent.toLowerCase() === "unsubscribing"
-			|| tag.href.toLowerCase().indexOf("unsubscribe")>=0);
-		console.log(unsubRedirect);
+		let unsubRedirect = Array.from(anchors).find(({ textContent, href })=>
+			/unsubscribe/.test(textContent) || /unsubscribe/.test(href)
+		);
+
+		console.log('unsubRedirect:', unsubRedirect);
 		return unsubRedirect && unsubRedirect.href; //guard
 	}
 
