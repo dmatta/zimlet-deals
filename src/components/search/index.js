@@ -11,7 +11,8 @@ import { bindActionCreators } from 'redux';
 			limit: 500,
 			needExp: 1,
 			query: terms,
-			types: 'message'
+			types: 'message',
+			fetch: 'all'
 		}
 	],
 	savedResults: [
@@ -54,10 +55,27 @@ export default class Search extends Component {
 	}
 }
 
+function getHTMLPart(mimePartsRoot) {
+	if (mimePartsRoot.contentType === 'text/html') {
+		return mimePartsRoot.text;
+  	}
+
+  	if (mimePartsRoot.contentType === 'multipart/alternative') {
+    	const htmlPart = mimePartsRoot.mimeParts
+      		.filter(({ contentType }) => contentType === 'text/html')[0];
+
+    if (htmlPart) {
+      return htmlPart.text;
+    }
+  }
+}
+
+
 @wire('store', null, (store) => ({
 	moveMailItem: store.zimletRedux.actions.mail.moveMailItem
 }))
 @connect(undefined, (dispatch, { moveMailItem }) => bindActionCreators({ moveMailItem }, dispatch))
+
 @wire('zimbraComponents', null, ({ Sidebar, Button, Icon }) => ({ Sidebar,Button,Icon }))
 class DealItem extends Component {
 
@@ -73,11 +91,24 @@ class DealItem extends Component {
 		this.props.refresh && this.props.refresh();
 	}
 
+	findUnsubLink = () => {
+		//console.log(getHTMLPart(this.props.message.mimeParts));
+		let doc = new DOMParser().parseFromString(getHTMLPart(this.props.message.mimeParts), 'text/html');
+		let tags = doc.getElementsByTagName('a');
+
+		let unsubRedirect = Array.from(tags).find((tag)=>
+			tag.textContent.toLowerCase() === "unsubscribe"
+			|| tag.textContent.toLowerCase() === "unsubscribing"
+			|| tag.href.toLowerCase().indexOf("unsubscribe")>=0);
+		console.log(unsubRedirect);
+		return unsubRedirect && unsubRedirect.href; //guard
+	}
+
 	render({message, isSaved, Sidebar, Button, Icon}) {
 		let button = isSaved ? (
 			<span class={style.dealRight}><Button class={style.removeButton} onClick={this.removeSavedDeals}><span><Icon name="close"/></span></Button></span>
 		) : (
-			<span class={style.dealRight}><Button styleType="primary" brand="primary>" onClick={this.moveToSavedDeals}>Save</Button> <Button styleType="secondary">Unsubscribe</Button></span>
+			<span class={style.dealRight}><Button styleType="primary" brand="primary>" onClick={this.moveToSavedDeals}>Save</Button> <Button styleType="secondary" href={this.findUnsubLink()}>Unsubscribe</Button></span>
 		);
 
 		let icon = isSaved ? (
@@ -85,7 +116,6 @@ class DealItem extends Component {
 		) : (
 			<span class={style.dealLeft}><Icon name="fa:cut" /></span>
 		);
-
 
 		console.log(this.context);
 		return (
