@@ -39,8 +39,7 @@ export default class Search extends Component {
 
 @wire('zimbraComponents', null, ({ Sidebar, Button, Icon }) => ({ Sidebar,Button,Icon }))
 class DealItem extends Component {
-
-	actionWasClicked = ( messageId ) => {
+	moveToSavedDeals = ( messageId ) => {
 		console.log(`Moving messageId ${messageId}`);
 	}
 
@@ -53,7 +52,7 @@ class DealItem extends Component {
 						{`${message.from[0].name}:${message.subject}`}</a>
 						<br/>Expires: 2018-Apr-15
 			</span>
-			<span class={style.dealRight}><Button styleType="primary" brand="primary>" onClick="this.moveToSavedDeals({message.id})">Save</Button> <Button styleType="secondary">Unsubscribe</Button></span>
+			<span class={style.dealRight}><Button styleType="primary" brand="primary>" onClick={this.moveToSavedDeals(message.id)}>Save</Button> <Button styleType="secondary">Unsubscribe</Button></span>
 		</li>
 	);
 	}
