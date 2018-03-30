@@ -3,6 +3,7 @@ import wire from 'wiretie';
 import style from './style';
 import { connect } from 'preact-redux';
 import { bindActionCreators } from 'redux';
+import { DEALS_FOLDER } from '../../constants';
 
 @wire('zimbra', ({ terms }) => ({
 	searchResults: [
@@ -20,14 +21,14 @@ import { bindActionCreators } from 'redux';
 		{
 			limit: 500,
 			needExp: 1,
-			query: "in:saved-deals",
+			query: `in:"${DEALS_FOLDER}"`,
 			types: 'message'
 		}
 	]
 }))
 export default class Search extends Component {
 	static defaultProps = {terms:"off OR sale OR clearance OR discount OR offers OR steal OR gift OR last chance OR coupon"};
-	render({searchResults, savedResults, pending = {} , rejected = {}, refresh }) {
+	render({ dealsFolder, searchResults, savedResults, pending = {} , rejected = {}, refresh }) {
 		console.log(searchResults, savedResults);
 		let loading = (pending.searchResults || pending.savedResults) && 'Loading...';
 		let error = (rejected.searchResults || rejected.savedResults) && 'Error';
@@ -35,9 +36,9 @@ export default class Search extends Component {
 		let emptySavedResults = (!savedResults || !savedResults.length) && 'Empty';
 		let results = !emptySearchResults && searchResults.messages
 			.filter(message => /(off|sale|clearance|discount|offers|steal|gift|last chance|coupon)/i.test(message.subject))
-			.map(message => <DealItem message={message} refresh={refresh} isSaved={false}></DealItem>);
+			.map(message => <DealItem dealsFolder={dealsFolder} message={message} refresh={refresh} isSaved={false}></DealItem>);
 		let saved = !emptySavedResults && savedResults.messages
-			.map(message => <DealItem message={message} refresh={refresh} isSaved={true}></DealItem>);
+			.map(message => <DealItem dealsFolder={dealsFolder} message={message} refresh={refresh} isSaved={true}></DealItem>);
 
 		return (
 			<div class={style.main}>
@@ -82,7 +83,7 @@ class DealItem extends Component {
 
 	moveToSavedDeals = () => {
 		console.log(`Moving messageId ${this.props.message.id}`);
-		this.props.moveMailItem({ type:"message", id:this.props.message.id, destFolderId:297});
+		this.props.moveMailItem({ type:"message", id:this.props.message.id, destFolderId: this.props.dealsFolder.id });
 		this.props.refresh && this.props.refresh();
 	}
 
