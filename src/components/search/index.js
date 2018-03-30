@@ -25,28 +25,29 @@ import { bindActionCreators } from 'redux';
 	]
 }))
 export default class Search extends Component {
-	static defaultProps = {terms:"off OR sale OR clearance OR discount OR offers OR steal OR gift OR last chance OR coupon"}
+	static defaultProps = {terms:"off OR sale OR clearance OR discount OR offers OR steal OR gift OR last chance OR coupon"};
 	render({searchResults, savedResults, pending = {} , rejected = {}, refresh }) {
 		console.log(searchResults, savedResults);
 		let loading = (pending.searchResults || pending.savedResults) && 'Loading...';
 		let error = (rejected.searchResults || rejected.savedResults) && 'Error';
-		let empty = (!searchResults || !searchResults.length || !savedResults || !savedResults.length) && 'Empty';
-		let results = !empty && searchResults.messages
+		let emptySearchResults = (!searchResults || !searchResults.length) && 'Empty';
+		let emptySavedResults = (!savedResults || !savedResults.length) && 'Empty';
+		let results = !emptySearchResults && searchResults.messages
 			.filter(message => /(off|sale|clearance|discount|offers|steal|gift|last chance|coupon)/i.test(message.subject))
-			.map(message => <DealItem message={message} refresh={refresh}></DealItem>);
-		let saved = !empty && savedResults.messages
-			.map(message => <DealItem message={message} savedStyle="display:none"></DealItem>);
+			.map(message => <DealItem message={message} refresh={refresh} isSaved={false}></DealItem>);
+		let saved = !emptySavedResults && savedResults.messages
+			.map(message => <DealItem message={message} refresh={refresh} isSaved={true}></DealItem>);
 
 		return (
 			<div class={style.main}>
-				<h2 class={style.header}>Saved Coupons</h2>
+				<h2 class={style.header}>Coupons & Deals</h2>
 				<ul class={style.deals}>
-					{loading || error || empty || saved }
+					{loading || error || emptySavedResults || saved }
 				</ul>
-				<h2 class={style.header}>New Coupons</h2>
+				<hr/>
 				<ul class={style.deals}>
 
-					{loading || error || empty || results }
+					{loading || error || emptySearchResults || results }
 				</ul>
 			</div>
 		);
@@ -66,17 +67,36 @@ class DealItem extends Component {
 		this.props.refresh && this.props.refresh();
 	}
 
-	render({message, savedStyle, Sidebar, Button, Icon}) {
+	removeSavedDeals = () => {
+		console.log(`removing saved deal messageId ${this.props.message.id}`);
+		this.props.moveMailItem({ type:"message", id:this.props.message.id, destFolderId:2});
+		this.props.refresh && this.props.refresh();
+	}
+
+	render({message, isSaved, Sidebar, Button, Icon}) {
+		let button = isSaved ? (
+			<span class={style.dealRight}><Button class={style.removeButton} onClick={this.removeSavedDeals}><span><Icon name="close"/></span></Button></span>
+		) : (
+			<span class={style.dealRight}><Button styleType="primary" brand="primary>" onClick={this.moveToSavedDeals}>Save</Button> <Button styleType="secondary">Unsubscribe</Button></span>
+		);
+
+		let icon = isSaved ? (
+			<span class={style.savedDealLeft}><Icon name="check" size="lg"/></span>
+		) : (
+			<span class={style.dealLeft}><Icon name="fa:cut" /></span>
+		);
+
+
 		console.log(this.context);
 		return (
 			<li class={style.deal}>
-				<span class={style.dealLeft}><Icon name="fa:cut" /></span>
+				{icon}
 				<span class={style.dealMiddle}>
 					<a href={`conversation/-${message.id}`}>
 						{`${message.from[0].name}:  ${message.subject}`}</a>
 						<br/>Expires: 2018-Apr-15
 			</span>
-			<span class={style.dealRight}><Button style={savedStyle} styleType="primary" brand="primary>" onClick={this.moveToSavedDeals}>Save</Button> <Button styleType="secondary">Unsubscribe</Button></span>
+			{button}
 		</li>
 	);
 	}

@@ -8,9 +8,9 @@ export default function Zimlet(context) {
 	const { plugins, components } = context;
 	const exports = {};
 	const App = createApp(context);
-	
+
 	exports.init = function init() {
-		plugins.register('slot::menu', MenuItem);
+		plugins.register('slot::folder-group', FolderListItem);
 		plugins.register('slot::routes', Router);
 	};
 
@@ -22,14 +22,12 @@ export default function Zimlet(context) {
 	}
 
 	// Create a main nav menu item
-	const MenuItem = withIntl(() => (
-		<components.MenuItem
-			responsive
-			icon="fa:code"
+	const FolderListItem = withIntl(() => (
+		<a
 			href={`/${SLUG}`}
 		>
-			<Text id="zimlet-deals.menuItem" />
-		</components.MenuItem>
+			Coupons & Deals
+		</a>
 	));
 
 	return exports;
