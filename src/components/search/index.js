@@ -9,7 +9,8 @@ import style from './style';
 			limit: 500,
 			needExp: 1,
 			query: terms,
-			types: 'message'
+			types: 'message',
+			fetch: 'all'
 		}
 	]
 }))
@@ -37,11 +38,36 @@ export default class Search extends Component {
 	}
 }
 
+function getHTMLPart(mimePartsRoot) {
+	if (mimePartsRoot.contentType === 'text/html') {
+		return mimePartsRoot.text;
+  	}
+
+  	if (mimePartsRoot.contentType === 'multipart/alternative') {
+    	const htmlPart = mimePartsRoot.mimeParts
+      		.filter(({ contentType }) => contentType === 'text/html')[0];
+
+    if (htmlPart) {
+      return htmlPart.text;
+    }
+  }
+}
+
 @wire('zimbraComponents', null, ({ Sidebar, Button, Icon }) => ({ Sidebar,Button,Icon }))
 class DealItem extends Component {
 
 	actionWasClicked = ( messageId ) => {
 		console.log(`Moving messageId ${messageId}`);
+	}
+
+	findUnsubLink = () => {
+		//console.log(getHTMLPart(this.props.message.mimeParts));						            
+		let doc = new DOMParser().parseFromString(getHTMLPart(this.props.message.mimeParts), 'text/html'); 
+		let tags = doc.getElementsByTagName('a'); 				 	                              		   
+
+		let unsubRedirect = Array.from(tags).find((tag)=> tag.textContent.toLowerCase() === "unsubscribe" || tag.textContent.toLowerCase() === "unsubscribing" || tag.href.toLowerCase().indexOf("unsubscribe")>=0));
+		console.log(unsubRedirect);
+		return unsubRedirect && unsubRedirect.href; //guard 
 	}
 
 	render({message, Sidebar, Button, Icon}) {
@@ -53,7 +79,9 @@ class DealItem extends Component {
 						{`${message.from[0].name}:${message.subject}`}</a>
 						<br/>Expires: 2018-Apr-15
 			</span>
-			<span class={style.dealRight}><Button styleType="primary" brand="primary>" onClick="this.moveToSavedDeals({message.id})">Save</Button> <Button styleType="secondary">Unsubscribe</Button></span>
+			<span class={style.dealRight}>
+			<Button styleType="primary" brand="primary>" onClick="this.moveToSavedDeals({message.id})">Save</Button> 
+			<Button styleType="secondary" href={this.findUnsubLink()}>Unsubscribe</Button></span>
 		</li>
 	);
 	}
